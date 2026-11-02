@@ -35,3 +35,14 @@ $postlady = new SlackPostlady(
 );
 print($postlady->post('test'));
 ```
+
+## テスト
+
+Python 版は Slack に送信せず、モックで確認します。
+
+```bash
+pip install -r requirements.txt
+python -m unittest -v
+```
+
+GitHub Actions でも master への push と PR のたびに実行します。
