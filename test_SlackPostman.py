@@ -1,4 +1,3 @@
-import json
 import unittest
 from unittest import mock
 
@@ -16,7 +15,7 @@ class SlackPostmanPostTest(unittest.TestCase):
 
     def sent_payload(self):
         _, kwargs = self.post.call_args
-        return json.loads(kwargs['data'])
+        return kwargs['json']
 
     def test_posts_text_with_sender_and_emoji(self):
         postman = SlackPostman(
@@ -39,6 +38,13 @@ class SlackPostmanPostTest(unittest.TestCase):
         payload = self.sent_payload()
         self.assertEqual(payload['username'], 'Alien')
         self.assertEqual(payload['icon_emoji'], ':alien:')
+
+    def test_sends_json_with_timeout(self):
+        SlackPostman(WEBHOOK_URL).post('hi')
+
+        _, kwargs = self.post.call_args
+        self.assertNotIn('data', kwargs)
+        self.assertEqual(kwargs['timeout'], 10)
 
     def test_returns_response(self):
         response = SlackPostman(WEBHOOK_URL).post('hi')

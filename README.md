@@ -25,6 +25,8 @@ postman = SlackPostman(
 postman.post('どうもどうも')
 ```
 
+`post()` は JSON 形式で送信し、`requests.Response` をそのまま返します。10 秒でタイムアウトします。
+
 PHP のほう。
 
 ```php
