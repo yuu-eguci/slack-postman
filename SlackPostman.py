@@ -8,7 +8,6 @@
 '''
 
 import requests
-import json
 
 class SlackPostman:
     '''PythonからSlackへメッセージを送信します。'''
@@ -21,11 +20,12 @@ class SlackPostman:
     def post(self, text):
         return requests.post(
             self.webhook_url,
-            data = json.dumps({
+            json = {
                 'text'      : text,
                 'username'  : self.sender,
                 'icon_emoji': self.sender_emoji,
-            })
+            },
+            timeout = 10,
         )
 
 
