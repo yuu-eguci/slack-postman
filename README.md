@@ -2,7 +2,7 @@
 SlackPostman
 ===
 
-Slackに投稿するよ!
+Slack に投稿します
 
 ![1](media/POSTMAN.jpg)
 
@@ -26,6 +26,15 @@ postman.post('どうもどうも')
 ```
 
 `post()` は JSON 形式で送信し、`requests.Response` をそのまま返します。10 秒でタイムアウトします。
+
+コマンドからも送信できます。Webhook URL はコードに書かず、環境変数で渡します。
+
+```bash
+export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/...'
+python SlackPostman.py 'どうもどうも'
+```
+
+送信に失敗した場合は終了コード 1、引数や環境変数が足りない場合は 2 で終了します。エラーには Webhook URL を表示しません。
 
 PHP のほう。
 

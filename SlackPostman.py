@@ -1,5 +1,5 @@
 
-'''PythonでSlackに投稿するよ!
+'''Python で Slack に投稿します。
 
 0. https://slack.com/apps/A0F7XDUAZ--web-
 1. Menu > Configure Apps > Custom Integrations > Incoming WebHooks > Add Configuration
@@ -7,7 +7,11 @@
 
 '''
 
+import argparse
+import os
+
 import requests
+
 
 class SlackPostman:
     '''PythonからSlackへメッセージを送信します。'''
@@ -29,25 +33,24 @@ class SlackPostman:
         )
 
 
+def main(args=None):
+    parser = argparse.ArgumentParser(
+        description='環境変数 SLACK_WEBHOOK_URL の Webhook にメッセージを送ります。')
+    parser.add_argument('text', help='送信するメッセージ')
+    text = parser.parse_args(args).text
+
+    webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
+    if not webhook_url:
+        parser.error('環境変数 SLACK_WEBHOOK_URL を設定してください。')
+
+    # 例外メッセージには Webhook URL が入るため、型名だけ表示します。
+    try:
+        response = SlackPostman(webhook_url).post(text)
+    except requests.RequestException as e:
+        parser.exit(1, f'送信に失敗しました: {type(e).__name__}\n')
+    if not response.ok:
+        parser.exit(1, f'送信に失敗しました: {response.status_code} {response.text}\n')
+
+
 if __name__ == "__main__":
-
-    # 送信するチャンネルURL、送信者名、送信者アイコンを指定します。
-    # sender_emoji参考: https://www.webpagefx.com/tools/emoji-cheat-sheet/
-
-    webhook_url = '***'
-
-    postman1 = SlackPostman(
-        webhook_url,
-        sender = 'Invader',
-        sender_emoji = ':trollface:'
-    )
-
-    postman2 = SlackPostman(
-        webhook_url,
-        sender = 'Pumpkin',
-        sender_emoji = ':jack_o_lantern:'
-    )
-
-    # 送ります。
-    postman1.post('どうもどうも')
-    postman2.post('Pythonからお邪魔しますよ')
+    main()
